@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { FaTrophy, FaUsers, FaCameraRetro } from "react-icons/fa"; // Added FaCameraRetro
+import { motion, Variants } from "framer-motion"; // UPDATED: Imported Variants
+import { FaTrophy, FaUsers, FaCameraRetro } from "react-icons/fa";
 
 const activities = [
-   {
+  {
     id: 1,
     title: "BUBT IT Club",
     role: "Active Member",
@@ -15,7 +15,8 @@ const activities = [
     color: "text-neonPurple",
     border: "group-hover:border-neonPurple/50",
     shadow: "group-hover:shadow-[0_0_20px_rgba(157,78,221,0.2)]",
-  },{
+  },
+  {
     id: 2,
     title: "ICPC Asia Dhaka Regional",
     role: "Participant",
@@ -27,7 +28,6 @@ const activities = [
     border: "group-hover:border-neonBlue/50",
     shadow: "group-hover:shadow-[0_0_20px_rgba(0,243,255,0.2)]",
   },
- 
   {
     id: 3,
     title: "BUBT Photography Club",
@@ -42,7 +42,7 @@ const activities = [
   },
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -50,7 +50,7 @@ const containerVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
@@ -90,7 +90,6 @@ export default function Achievements() {
           </motion.p>
         </div>
 
-        {/* UPDATED: Changed grid to lg:grid-cols-3 so all 3 cards fit on one row */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -126,7 +125,6 @@ export default function Achievements() {
                   {activity.role}
                 </h4>
 
-                {/* Flex-grow pushes the description to take available space, keeping cards even */}
                 <p className="text-gray-400 leading-relaxed text-sm md:text-base flex-grow">
                   {activity.description}
                 </p>
