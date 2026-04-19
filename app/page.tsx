@@ -7,6 +7,7 @@ import Contact from "@/components/sections/Contact";
 
 import { connectDB } from "@/lib/mongodb";
 import Project from "@/models/Project";
+import BackToTop from "@/components/BackToTop";
 
 export const revalidate = 0; // Ensures the page fetches fresh data
 
@@ -30,6 +31,7 @@ export default async function Home() {
       <Projects projects={projects} />
       <Experience />
       <Contact />
+      <BackToTop />
     </main>
   );
 }
