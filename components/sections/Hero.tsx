@@ -1,10 +1,23 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react"; // Imported the download icon
+import { FaDownload } from "react-icons/fa";
 
 export default function Hero() {
+  // State to hold the dynamic resume URL
+  const [resumeUrl, setResumeUrl] = useState("/resume.pdf"); // fallback to static if DB fails
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.resumeUrl) setResumeUrl(data.resumeUrl);
+      })
+      .catch((err) => console.error("Failed to load resume link", err));
+  }, []);
+
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-darkBg text-white">
       {/* Background Neon Glows */}
@@ -51,31 +64,38 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex flex-wrap justify-center gap-4 mt-8" // Added flex-wrap for mobile responsiveness
         >
-          <Button className="bg-neonBlue hover:bg-neonBlue/80 text-black font-semibold rounded-full px-8 py-6 shadow-[0_0_15px_rgba(0,243,255,0.4)]">
-            View Projects
-          </Button>
+          {/* Projects Link */}
+          <a href="#projects" className="inline-block">
+            <Button className="bg-neonBlue hover:bg-neonBlue/80 text-black font-semibold rounded-full px-8 py-6 shadow-[0_0_15px_rgba(0,243,255,0.4)] cursor-pointer">
+              View Projects
+            </Button>
+          </a>
 
-          {/* New Resume Download Button */}
-          <a 
-            href="/resume.pdf" // Make sure your file is named exactly this in the public folder
-            download="Muhaimin_Tanvir_Resume.pdf" // This is the name the file will save as
+          {/* Dynamic Resume Download Button */}
+          <a
+            href={resumeUrl}
+            target="_blank" // Cloudinary URLs should open in a new tab
+            rel="noopener noreferrer"
             className="inline-block"
           >
             <Button
               variant="outline"
-              className="rounded-full px-8 py-6 border-neonPurple/50 hover:bg-neonPurple/10 text-white flex items-center gap-2 transition-all"
+              className="rounded-full px-8 py-6 border-neonPurple/50 hover:bg-neonPurple/10 text-white flex items-center gap-2 transition-all cursor-pointer"
             >
-              <Download size={18} />
+              <FaDownload />
               Resume
             </Button>
           </a>
 
-          <Button
-            variant="outline"
-            className="rounded-full px-8 py-6 border-white/20 hover:bg-white/10 glass-gradient text-black dark:text-white"
-          >
-            Contact Me
-          </Button>
+          {/* Contact Link */}
+          <a href="#contact" className="inline-block">
+            <Button
+              variant="outline"
+              className="rounded-full px-8 py-6 border-white/20 hover:bg-white/10 glass-gradient text-black dark:text-white cursor-pointer"
+            >
+              Contact Me
+            </Button>
+          </a>
         </motion.div>
       </div>
     </section>
