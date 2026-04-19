@@ -6,13 +6,13 @@ const experiences = [
   {
     title: "Junior Software Engineer",
     company: "Skyland Web",
-    date: "06/24 - Present",
+    date: "01-06-2024 - Present",
     desc: "Building and improving modern web apps with the team, focusing on clean, responsive, and scalable front-end development using React.js and Next.js.",
   },
   {
     title: "Software Engineer Intern",
     company: "Skyland Web",
-    date: "03/24 - 05/24",
+    date: "01-03-2024 - 31-05-2024",
     desc: "Created user-friendly front-end features using React.js, ensuring smooth and scalable experiences.",
   },
 ];
