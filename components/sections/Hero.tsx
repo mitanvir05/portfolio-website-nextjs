@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { FaDownload } from "react-icons/fa";
 
 export default function Hero() {
-  // State to hold the dynamic resume URL
-  const [resumeUrl, setResumeUrl] = useState("/resume.pdf"); // fallback to static if DB fails
+  const [resumeUrl, setResumeUrl] = useState("");
 
   useEffect(() => {
     fetch("/api/settings")
@@ -42,7 +41,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-5xl md:text-7xl font-bold tracking-tight"
         >
-          MD. MUHAIMIN ISLAM{" "}
+          MUHAIMIN ISLAM{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-neonBlue to-neonPurple">
             TANVIR
           </span>
@@ -73,10 +72,15 @@ export default function Hero() {
 
           {/* Dynamic Resume Download Button */}
           <a
-            href={resumeUrl}
-            target="_blank" // Cloudinary URLs should open in a new tab
-            rel="noopener noreferrer"
-            className="inline-block"
+            href={resumeUrl || "#"}
+            target={resumeUrl ? "_blank" : undefined}
+            rel={resumeUrl ? "noopener noreferrer" : undefined}
+            // Disables the button visually and functionally if the URL hasn't loaded yet
+            className={`inline-block transition-opacity duration-300 ${
+              !resumeUrl
+                ? "opacity-50 pointer-events-none cursor-not-allowed"
+                : ""
+            }`}
           >
             <Button
               variant="outline"

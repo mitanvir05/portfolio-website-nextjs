@@ -19,7 +19,10 @@ const experiences = [
 
 export default function Experience() {
   return (
-    <section className="py-20 bg-darkBg text-white px-6 md:px-20 relative">
+    <section
+      id="experience"
+      className="py-20 bg-darkBg text-white px-6 md:px-20 relative"
+    >
       <h2 className="text-3xl font-bold mb-12 text-center">
         <span className="text-neonPurple">/</span> Experience
       </h2>
