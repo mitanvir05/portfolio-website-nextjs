@@ -18,19 +18,18 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-darkBg text-white">
-      {/* Background Neon Glows */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-neonBlue/20 rounded-full blur-[120px] mix-blend-screen" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neonPurple/20 rounded-full blur-[120px] mix-blend-screen" />
+    <section className="min-h-[85vh] md:min-h-screen flex items-center justify-center relative overflow-hidden bg-darkBg text-white py-10 md:py-0">
+      <div className="absolute top-1/4 left-1/4 w-64 md:w-96 h-64 md:h-96 bg-neonBlue/20 rounded-full blur-[80px] md:blur-[120px] mix-blend-screen" />
+      <div className="absolute bottom-1/4 right-1/4 w-64 md:w-96 h-64 md:h-96 bg-neonPurple/20 rounded-full blur-[80px] md:blur-[120px] mix-blend-screen" />
 
-      <div className="z-10 text-center space-y-6 max-w-3xl px-4">
+      <div className="z-10 text-center space-y-4 md:space-y-6 max-w-3xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-4"
+          className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-2 md:mb-4"
         >
-          <span className="text-neonBlue text-sm font-medium tracking-wider">
+          <span className="text-neonBlue text-xs md:text-sm font-medium tracking-wider">
             AVAILABLE FOR WORK
           </span>
         </motion.div>
@@ -39,7 +38,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-5xl md:text-7xl font-bold tracking-tight"
+          className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-tight"
         >
           MUHAIMIN ISLAM{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-neonBlue to-neonPurple">
@@ -51,7 +50,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg text-gray-400 md:text-xl"
+          className="text-base md:text-xl text-gray-400 max-w-2xl mx-auto"
         >
           Frontend Developer specializing in React.js & Next.js. Transforming
           concepts into scalable, real-world web applications.
@@ -61,11 +60,11 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-wrap justify-center gap-4 mt-8" // Added flex-wrap for mobile responsiveness
+          className="flex flex-wrap justify-center gap-3 md:gap-4 mt-6 md:mt-8"
         >
           {/* Projects Link */}
           <a href="#projects" className="inline-block">
-            <Button className="bg-neonBlue hover:bg-neonBlue/80 text-black font-semibold rounded-full px-8 py-6 shadow-[0_0_15px_rgba(0,243,255,0.4)] cursor-pointer">
+            <Button className="bg-neonBlue hover:bg-neonBlue/80 text-black font-semibold rounded-full px-6 md:px-8 py-5 md:py-6 shadow-[0_0_15px_rgba(0,243,255,0.4)] cursor-pointer text-sm md:text-base">
               View Projects
             </Button>
           </a>
@@ -75,7 +74,6 @@ export default function Hero() {
             href={resumeUrl || "#"}
             target={resumeUrl ? "_blank" : undefined}
             rel={resumeUrl ? "noopener noreferrer" : undefined}
-            // Disables the button visually and functionally if the URL hasn't loaded yet
             className={`inline-block transition-opacity duration-300 ${
               !resumeUrl
                 ? "opacity-50 pointer-events-none cursor-not-allowed"
@@ -84,9 +82,9 @@ export default function Hero() {
           >
             <Button
               variant="outline"
-              className="rounded-full px-8 py-6 border-neonPurple/50 hover:bg-neonPurple/10 text-white flex items-center gap-2 transition-all cursor-pointer"
+              className="rounded-full px-6 md:px-8 py-5 md:py-6 border-neonPurple/50 hover:bg-neonPurple/10 text-white flex items-center gap-2 transition-all cursor-pointer text-sm md:text-base"
             >
-              <FaDownload />
+              <FaDownload size={16} />
               Resume
             </Button>
           </a>
@@ -95,7 +93,7 @@ export default function Hero() {
           <a href="#contact" className="inline-block">
             <Button
               variant="outline"
-              className="rounded-full px-8 py-6 border-white/20 hover:bg-white/10 glass-gradient text-black dark:text-white cursor-pointer"
+              className="rounded-full px-6 md:px-8 py-5 md:py-6 border-white/20 hover:bg-white/10 glass-gradient text-black dark:text-white cursor-pointer text-sm md:text-base"
             >
               Contact Me
             </Button>

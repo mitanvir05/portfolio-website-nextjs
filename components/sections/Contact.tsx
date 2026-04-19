@@ -3,7 +3,7 @@
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
 import { toast } from "sonner";
-import { Send, Loader2 } from "lucide-react";
+import { FaPaperPlane, FaSpinner } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -39,8 +39,6 @@ export default function ContactSection() {
       );
 
       toast.success("Message sent successfully! I'll get back to you soon.");
-
-      // Clear the form after sending
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
       console.error("EmailJS Error:", error);
@@ -53,22 +51,22 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="py-20 bg-darkBg text-white px-6 md:px-20 border-t border-white/5"
+      className="py-10 md:py-20 bg-darkBg text-white px-6 md:px-20 border-t border-white/5"
     >
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-3xl font-bold mb-4 text-center">
+        <h2 className="text-2xl md:text-3xl font-bold mb-2 md:mb-4 text-center">
           <span className="text-neonBlue">/</span> Let's Connect
         </h2>
-        <p className="text-center text-gray-400 mb-12">
-          Have a question, a project idea, or just want to say hi? Drop me a
-          message below.
+
+        <p className="text-center text-sm md:text-base text-gray-400 mb-6 md:mb-12">
+          Have a question or a project idea? Drop me a message below.
         </p>
 
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-5 md:p-8 backdrop-blur-sm">
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              <div className="space-y-1.5 md:space-y-2">
+                <label className="text-xs md:text-sm font-medium text-gray-300">
                   Your Name
                 </label>
                 <Input
@@ -77,12 +75,12 @@ export default function ContactSection() {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="John Doe"
-                  className="bg-darkBg/50 border-white/10 focus-visible:ring-neonBlue text-white"
+                  className="bg-darkBg/50 border-white/10 focus-visible:ring-neonBlue text-white h-10 md:h-12"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">
+              <div className="space-y-1.5 md:space-y-2">
+                <label className="text-xs md:text-sm font-medium text-gray-300">
                   Email Address
                 </label>
                 <Input
@@ -92,13 +90,13 @@ export default function ContactSection() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="john@example.com"
-                  className="bg-darkBg/50 border-white/10 focus-visible:ring-neonBlue text-white"
+                  className="bg-darkBg/50 border-white/10 focus-visible:ring-neonBlue text-white h-10 md:h-12"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">
+            <div className="space-y-1.5 md:space-y-2">
+              <label className="text-xs md:text-sm font-medium text-gray-300">
                 Message
               </label>
               <Textarea
@@ -107,24 +105,24 @@ export default function ContactSection() {
                 value={formData.message}
                 onChange={handleChange}
                 placeholder="What's on your mind?"
-                className="bg-darkBg/50 border-white/10 focus-visible:ring-neonBlue text-white min-h-[150px]"
+                className="bg-darkBg/50 border-white/10 focus-visible:ring-neonBlue text-white min-h-[120px] md:min-h-[150px]"
               />
             </div>
 
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-neonBlue hover:bg-neonBlue/80 text-black font-bold py-6 text-lg rounded-xl transition-all shadow-[0_0_15px_rgba(0,243,255,0.2)] flex items-center justify-center gap-2"
+              className="w-full bg-neonBlue hover:bg-neonBlue/80 text-black font-bold py-5 md:py-6 text-base md:text-lg rounded-xl transition-all shadow-[0_0_15px_rgba(0,243,255,0.2)] flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="animate-spin" size={20} />
+                  <FaSpinner className="animate-spin" size={18} />
                   Sending...
                 </>
               ) : (
                 <>
                   Send Message
-                  <Send size={20} />
+                  <FaPaperPlane size={16} />
                 </>
               )}
             </Button>
