@@ -5,13 +5,26 @@ import Projects from "@/components/sections/Projects";
 import Experience from "@/components/sections/Experience";
 import Contact from "@/components/sections/Contact";
 
-export default function Home() {
+import { connectDB } from "@/lib/mongodb";
+import Project from "@/models/Project";
+
+export const revalidate = 0; // Ensures the page fetches fresh data
+
+export default async function Home() {
+  // Fetch projects directly from the database
+  await connectDB();
+  const projectsData = await Project.find({}).sort({ createdAt: -1 });
+
+  // Convert MongoDB documents to plain JSON objects to pass as props
+  const projects = JSON.parse(JSON.stringify(projectsData));
+
   return (
     <main className="flex flex-col w-full overflow-hidden">
       <Hero />
       <About />
       <Skills />
-      <Projects />
+      {/* Pass the real database projects into the component */}
+      <Projects projects={projects} />
       <Experience />
       <Contact />
     </main>
