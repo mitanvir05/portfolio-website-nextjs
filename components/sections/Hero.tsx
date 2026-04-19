@@ -64,7 +64,7 @@ export default function Hero() {
         >
           {/* Projects Link */}
           <a href="#projects" className="inline-block">
-            <Button className="bg-neonBlue hover:bg-neonBlue/80 text-black font-semibold rounded-full px-6 md:px-8 py-5 md:py-6 shadow-[0_0_15px_rgba(0,243,255,0.4)] cursor-pointer text-sm md:text-base">
+            <Button className="bg-neonBlue/95 hover:bg-neonBlue/80 text-black font-semibold rounded-full px-6 md:px-8 py-5 md:py-6 shadow-[0_0_15px_rgba(0,243,255,0.4)] cursor-pointer text-sm md:text-base">
               View Projects
             </Button>
           </a>
