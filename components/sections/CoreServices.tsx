@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { FaReact, FaServer, FaMobileAlt } from "react-icons/fa";
 
 const services = [
@@ -30,13 +30,13 @@ const services = [
     description:
       "Ensuring smooth, pixel-perfect experiences and optimized load times across all devices and screen sizes.",
     icon: <FaMobileAlt size={32} />,
-    color: "text-white", // Neutral pop for the third card
+    color: "text-white",
     shadow: "group-hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]",
     border: "group-hover:border-white/50",
   },
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -46,7 +46,7 @@ const containerVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
