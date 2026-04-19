@@ -23,7 +23,7 @@ export default function BackToTop() {
 
   const scrollToTop = () => {
     const startPosition = window.scrollY;
-    const duration = 400;
+    const duration = 50;
     let startTime: number | null = null;
 
     const animateScroll = (currentTime: number) => {
