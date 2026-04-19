@@ -10,6 +10,7 @@ const ProjectSchema = new Schema({
   backendLink: { type: String },
   imageUrls: [{ type: String }], // <-- CHANGED THIS TO AN ARRAY
   featured: { type: Boolean, default: false },
+  order: { type: Number, default: 0 },
 }, { timestamps: true });
 
 export default models.Project || model('Project', ProjectSchema);

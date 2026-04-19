@@ -9,7 +9,16 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-
+export async function GET() {
+    try {
+        await connectDB();
+        const projects = await Project.find({}).sort({ order: 1, createdAt: -1 });
+        return NextResponse.json(projects);
+    } catch (error) {
+        console.error("Error fetching projects:", error);
+        return NextResponse.json({ error: "Failed to fetch projects" }, { status: 500 });
+    }
+}
 export async function POST(req: Request) {
     try {
         await connectDB();

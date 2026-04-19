@@ -13,7 +13,10 @@ export const revalidate = 0; // Ensures the page fetches fresh data
 export default async function Home() {
   // Fetch projects directly from the database
   await connectDB();
-  const projectsData = await Project.find({}).sort({ createdAt: -1 });
+  const projectsData = await Project.find({ featured: true }).sort({
+    order: 1,
+    createdAt: -1,
+  });
 
   // Convert MongoDB documents to plain JSON objects to pass as props
   const projects = JSON.parse(JSON.stringify(projectsData));
