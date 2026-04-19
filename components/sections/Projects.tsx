@@ -18,9 +18,11 @@ export type ProjectType = {
   techStack: string[];
   liveLink?: string;
   githubLink?: string;
-  frontendLink?: string;
-  backendLink?: string;
+  frontendLink?: string | null;
+  backendLink?: string | null;
   imageUrls?: string[];
+  featured?: boolean;
+  order?: number;
 };
 
 /**
