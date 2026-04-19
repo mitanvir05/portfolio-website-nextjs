@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FaCodeBranch, FaExternalLinkAlt } from "react-icons/fa";
 import Link from "next/link";
@@ -10,10 +11,88 @@ export type ProjectType = {
   description: string;
   techStack: string[];
   liveLink?: string;
-  githubLink?: string; 
+  githubLink?: string;
   frontendLink?: string;
   backendLink?: string;
-  imageUrl?: string;
+  imageUrls?: string[];
+};
+
+const AutoSlider = ({
+  imageUrls,
+  title,
+}: {
+  imageUrls: string[];
+  title: string;
+}) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Sync dots with scroll position
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, clientWidth } = scrollRef.current;
+      const newIndex = Math.round(scrollLeft / clientWidth);
+      setCurrentIndex(newIndex);
+    }
+  };
+
+  useEffect(() => {
+    const isDesktop = typeof window !== "undefined" && window.innerWidth >= 768;
+    if (!isDesktop || isHovered || imageUrls.length <= 1) return;
+
+    const interval = setInterval(() => {
+      if (scrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        if (scrollLeft + clientWidth >= scrollWidth - 10) {
+          scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          scrollRef.current.scrollBy({ left: clientWidth, behavior: "smooth" });
+        }
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [isHovered, imageUrls.length]);
+
+  return (
+    <div
+      className="mb-6 rounded-xl overflow-hidden border border-white/10 aspect-video relative group/slider"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex w-full h-full overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      >
+        {imageUrls.map((url, i) => (
+          <div key={i} className="w-full h-full shrink-0 snap-center relative">
+            <img
+              src={url}
+              alt={`${title} - Screenshot ${i + 1}`}
+              className="object-cover w-full h-full hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+        ))}
+      </div>
+
+      {imageUrls.length > 1 && (
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20 bg-black/40 px-3 py-1.5 rounded-full backdrop-blur-sm border border-white/10 pointer-events-none">
+          {imageUrls.map((_, i) => (
+            <div
+              key={i}
+              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                currentIndex === i
+                  ? "bg-neonBlue scale-125 shadow-[0_0_8px_rgba(0,243,255,0.8)]"
+                  : "bg-white/30"
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default function Projects({ projects }: { projects: ProjectType[] }) {
@@ -53,17 +132,12 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
             className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-neonBlue/50 transition-all duration-300 hover:-translate-y-2 flex flex-col"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-neonBlue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none" />
-
             <div className="relative z-10 flex flex-col h-full">
-              {project.imageUrl && (
-                <div className="mb-6 rounded-xl overflow-hidden border border-white/10 aspect-video relative">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={project.imageUrl}
-                    alt={project.title}
-                    className="object-cover w-full h-full hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
+              {project.imageUrls && project.imageUrls.length > 0 && (
+                <AutoSlider
+                  imageUrls={project.imageUrls}
+                  title={project.title}
+                />
               )}
 
               <div className="flex justify-between items-start mb-6">
@@ -71,7 +145,6 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
                   {project.title}
                 </h3>
                 <div className="flex gap-4 text-gray-400">
-                  {/* Single GitHub Repo */}
                   {project.githubLink && (
                     <Link
                       href={project.githubLink}
@@ -83,8 +156,6 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
                       <span className="text-xs">CODE</span>
                     </Link>
                   )}
-
-                  {/* Frontend Repo */}
                   {project.frontendLink && (
                     <Link
                       href={project.frontendLink}
@@ -96,8 +167,6 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
                       <span className="text-xs">FE</span>
                     </Link>
                   )}
-
-                  {/* Backend Repo */}
                   {project.backendLink && (
                     <Link
                       href={project.backendLink}
@@ -109,8 +178,6 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
                       <span className="text-xs">BE</span>
                     </Link>
                   )}
-
-                  {/* Live URL */}
                   {project.liveLink && (
                     <Link
                       href={project.liveLink}
@@ -124,11 +191,9 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
                   )}
                 </div>
               </div>
-
               <p className="text-gray-400 leading-relaxed mb-6 flex-grow">
                 {project.description}
               </p>
-
               <div className="flex flex-wrap gap-2 mt-auto">
                 {project.techStack.map((tech, techIdx) => (
                   <span

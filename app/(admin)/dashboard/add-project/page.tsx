@@ -7,14 +7,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { ArrowLeft, ImagePlus } from "lucide-react";
+import { ArrowLeft, ImagePlus, X } from "lucide-react";
 
 export default function AddProjectPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
 
-  // New state to toggle repository type UI
+  // State for multiple image files
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+
+  // State to toggle repository type UI
   const [repoType, setRepoType] = useState<"single" | "separate">("single");
 
   const [formData, setFormData] = useState({
@@ -22,9 +24,9 @@ export default function AddProjectPage() {
     description: "",
     techStack: "",
     liveLink: "",
-    githubLink: "", // For single repo
-    frontendLink: "", // For separate repos
-    backendLink: "", // For separate repos
+    githubLink: "",
+    frontendLink: "",
+    backendLink: "",
   });
 
   const handleChange = (
@@ -34,13 +36,27 @@ export default function AddProjectPage() {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImageFile(e.target.files[0]);
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      // Append new files to existing ones instead of replacing
+      setImageFiles((prev) => [...prev, ...newFiles]);
+
+      // Reset the input value so the same file can be picked again if deleted
+      e.target.value = "";
     }
+  };
+
+  const removeImage = (index: number) => {
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (imageFiles.length === 0) {
+      toast.error("Please upload at least one image.");
+      return;
+    }
+
     setIsLoading(true);
 
     const submitData = new FormData();
@@ -50,7 +66,6 @@ export default function AddProjectPage() {
 
     if (formData.liveLink) submitData.append("liveLink", formData.liveLink);
 
-    // Conditionally append repo links based on the toggle state
     if (repoType === "single" && formData.githubLink) {
       submitData.append("githubLink", formData.githubLink);
     } else if (repoType === "separate") {
@@ -60,7 +75,9 @@ export default function AddProjectPage() {
         submitData.append("backendLink", formData.backendLink);
     }
 
-    if (imageFile) submitData.append("image", imageFile);
+    imageFiles.forEach((file) => {
+      submitData.append("images", file);
+    });
 
     try {
       const res = await fetch("/api/projects", {
@@ -97,6 +114,7 @@ export default function AddProjectPage() {
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Title, Description, TechStack, LiveLink remain the same */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-300">
                 Project Title *
@@ -152,7 +170,6 @@ export default function AddProjectPage() {
               />
             </div>
 
-            {/* Repository Toggle Controls */}
             <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-4">
               <div className="flex gap-6">
                 <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
@@ -177,7 +194,6 @@ export default function AddProjectPage() {
                 </label>
               </div>
 
-              {/* Conditional Repository Inputs */}
               {repoType === "single" ? (
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-300">
@@ -193,46 +209,67 @@ export default function AddProjectPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300">
-                      Frontend Repo
-                    </label>
-                    <Input
-                      name="frontendLink"
-                      value={formData.frontendLink}
-                      onChange={handleChange}
-                      className="bg-darkBg/50 border-white/10 focus-visible:ring-neonBlue text-white"
-                      placeholder="https://github.com/..."
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300">
-                      Backend Repo
-                    </label>
-                    <Input
-                      name="backendLink"
-                      value={formData.backendLink}
-                      onChange={handleChange}
-                      className="bg-darkBg/50 border-white/10 focus-visible:ring-neonBlue text-white"
-                      placeholder="https://github.com/..."
-                    />
-                  </div>
+                  <Input
+                    name="frontendLink"
+                    value={formData.frontendLink}
+                    onChange={handleChange}
+                    className="bg-darkBg/50 border-white/10 text-white"
+                    placeholder="Frontend Repo URL"
+                  />
+                  <Input
+                    name="backendLink"
+                    value={formData.backendLink}
+                    onChange={handleChange}
+                    className="bg-darkBg/50 border-white/10 text-white"
+                    placeholder="Backend Repo URL"
+                  />
                 </div>
               )}
             </div>
 
-            <div className="space-y-2">
+            {/* UPGRADED IMAGE UPLOAD SECTION */}
+            <div className="space-y-4">
               <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                <ImagePlus size={16} /> Cover Image
+                <ImagePlus size={16} /> Cover Images (Upload Multiple)
               </label>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="bg-darkBg/50 border-white/10 focus-visible:ring-neonBlue text-white file:text-neonBlue file:bg-transparent file:border-0 file:font-semibold cursor-pointer"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Upload a screenshot from your device (JPG, PNG, WebP)
+
+              {/* Preview Grid */}
+              {imageFiles.length > 0 && (
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 mb-4">
+                  {imageFiles.map((file, index) => (
+                    <div
+                      key={index}
+                      className="relative group aspect-video rounded-lg overflow-hidden border border-white/10 bg-white/5"
+                    >
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt="preview"
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="relative">
+                <Input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="bg-darkBg/50 border-white/10 focus-visible:ring-neonBlue text-white file:text-neonBlue file:bg-transparent file:border-0 file:font-semibold cursor-pointer"
+                />
+              </div>
+              <p className="text-xs text-gray-500">
+                Tip: You can select images one by one or multiple at once. Click
+                the X on a preview to remove it.
               </p>
             </div>
 

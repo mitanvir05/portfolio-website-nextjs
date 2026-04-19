@@ -5,10 +5,10 @@ const ProjectSchema = new Schema({
   description: { type: String, required: true },
   techStack: [{ type: String }],
   liveLink: { type: String },
-  githubLink: { type: String }, // <-- ADDED THIS BACK
+  githubLink: { type: String }, 
   frontendLink: { type: String },
   backendLink: { type: String },
-  imageUrl: { type: String },
+  imageUrls: [{ type: String }], // <-- CHANGED THIS TO AN ARRAY
   featured: { type: Boolean, default: false },
 }, { timestamps: true });
 

@@ -20,31 +20,39 @@ export async function POST(req: Request) {
         const description = formData.get("description") as string;
         const techStackString = formData.get("techStack") as string;
         const liveLink = formData.get("liveLink") as string;
-        const githubLink = formData.get("githubLink") as string; // <-- ADDED THIS BACK
+        const githubLink = formData.get("githubLink") as string;
         const frontendLink = formData.get("frontendLink") as string;
         const backendLink = formData.get("backendLink") as string;
-        const imageFile = formData.get("image") as File | null;
+
+        // GET ALL IMAGES INSTEAD OF JUST ONE
+        const imageFiles = formData.getAll("images") as File[];
 
         const techStack = techStackString
             ? techStackString.split(",").map((t) => t.trim()).filter(Boolean)
             : [];
 
-        let imageUrl = "";
+        let imageUrls: string[] = [];
 
-        if (imageFile && imageFile.size > 0) {
-            const bytes = await imageFile.arrayBuffer();
-            const buffer = Buffer.from(bytes);
+        // UPLOAD MULTIPLE IMAGES CONCURRENTLY
+        if (imageFiles && imageFiles.length > 0) {
+            const uploadPromises = imageFiles.map(async (file) => {
+                const bytes = await file.arrayBuffer();
+                const buffer = Buffer.from(bytes);
 
-            imageUrl = await new Promise<string>((resolve, reject) => {
-                const uploadStream = cloudinary.uploader.upload_stream(
-                    { folder: "portfolio" },
-                    (error, result) => {
-                        if (error) reject(error);
-                        else resolve(result?.secure_url as string);
-                    }
-                );
-                uploadStream.end(buffer);
+                return new Promise<string>((resolve, reject) => {
+                    const uploadStream = cloudinary.uploader.upload_stream(
+                        { folder: "portfolio" },
+                        (error, result) => {
+                            if (error) reject(error);
+                            else resolve(result?.secure_url as string);
+                        }
+                    );
+                    uploadStream.end(buffer);
+                });
             });
+
+            // Wait for all images to finish uploading to Cloudinary
+            imageUrls = await Promise.all(uploadPromises);
         }
 
         const project = await Project.create({
@@ -52,10 +60,10 @@ export async function POST(req: Request) {
             description,
             techStack,
             liveLink,
-            githubLink, // <-- ADDED THIS BACK
+            githubLink,
             frontendLink,
             backendLink,
-            imageUrl,
+            imageUrls, // <-- SAVE THE ARRAY TO DATABASE
             featured: true,
         });
 
