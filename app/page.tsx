@@ -8,6 +8,8 @@ import Contact from "@/components/sections/Contact";
 import { connectDB } from "@/lib/mongodb";
 import Project from "@/models/Project";
 import BackToTop from "@/components/BackToTop";
+import QuickStats from "@/components/sections/QuickStats";
+import CoreServices from "@/components/sections/CoreServices";
 
 export const revalidate = 0; // Ensures the page fetches fresh data
 
@@ -25,7 +27,9 @@ export default async function Home() {
   return (
     <main className="flex flex-col w-full overflow-hidden">
       <Hero />
+      <QuickStats/>
       <About />
+      <CoreServices/>
       <Skills />
       {/* Pass the real database projects into the component */}
       <Projects projects={projects} />
