@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react"; // Imported the download icon
 
 export default function Hero() {
   return (
@@ -48,11 +49,27 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex justify-center gap-4 mt-8"
+          className="flex flex-wrap justify-center gap-4 mt-8" // Added flex-wrap for mobile responsiveness
         >
           <Button className="bg-neonBlue hover:bg-neonBlue/80 text-black font-semibold rounded-full px-8 py-6 shadow-[0_0_15px_rgba(0,243,255,0.4)]">
             View Projects
           </Button>
+
+          {/* New Resume Download Button */}
+          <a 
+            href="/resume.pdf" // Make sure your file is named exactly this in the public folder
+            download="Muhaimin_Tanvir_Resume.pdf" // This is the name the file will save as
+            className="inline-block"
+          >
+            <Button
+              variant="outline"
+              className="rounded-full px-8 py-6 border-neonPurple/50 hover:bg-neonPurple/10 text-white flex items-center gap-2 transition-all"
+            >
+              <Download size={18} />
+              Resume
+            </Button>
+          </a>
+
           <Button
             variant="outline"
             className="rounded-full px-8 py-6 border-white/20 hover:bg-white/10 glass-gradient text-black dark:text-white"

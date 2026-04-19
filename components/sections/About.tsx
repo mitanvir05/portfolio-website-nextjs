@@ -49,11 +49,10 @@ export default function About() {
               <div className="space-y-6">
                 <div className="relative pl-6 before:absolute before:left-0 before:top-2 before:w-2 before:h-2 before:bg-neonPurple before:rounded-full">
                   <h4 className="text-lg font-semibold text-white">
-                    M.Sc. in Computer Science
+                    M.Sc. in Information Technology
                   </h4>
                   <p className="text-sm text-gray-400">
-                    Jahangirnagar University (Institute of Information
-                    Technology)
+                    Jahangirnagar University
                   </p>
                   <span className="text-xs text-neonBlue mt-1 inline-block">
                     2025 - Present
