@@ -34,7 +34,7 @@ export async function PATCH(req: Request, { params }: RouteParams) {
         // 1. JSON request (like toggling the featured star)
         if (contentType.includes("application/json")) {
             const body = await req.json();
-            const updatedProject = await Project.findByIdAndUpdate(id, { $set: body }, { new: true });
+            const updatedProject = await Project.findByIdAndUpdate(id, { $set: body }, { returnDocument: "after" });
             return NextResponse.json(updatedProject, { status: 200 });
         }
 
@@ -73,7 +73,7 @@ export async function PATCH(req: Request, { params }: RouteParams) {
             updateData.imageUrls = await Promise.all(uploadPromises);
         }
 
-        const updatedProject = await Project.findByIdAndUpdate(id, updateData, { new: true });
+        const updatedProject = await Project.findByIdAndUpdate(id, updateData, { returnDocument: "after" });
         return NextResponse.json(updatedProject, { status: 200 });
     } catch (error) {
         console.error("Error updating project:", error);
