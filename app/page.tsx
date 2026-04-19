@@ -10,6 +10,7 @@ import Project from "@/models/Project";
 import BackToTop from "@/components/BackToTop";
 import QuickStats from "@/components/sections/QuickStats";
 import CoreServices from "@/components/sections/CoreServices";
+import Achievements from "@/components/sections/Achievements";
 
 export const revalidate = 0; // Ensures the page fetches fresh data
 
@@ -34,6 +35,7 @@ export default async function Home() {
       {/* Pass the real database projects into the component */}
       <Projects projects={projects} />
       <Experience />
+      <Achievements/>
       <Contact />
       <BackToTop />
     </main>

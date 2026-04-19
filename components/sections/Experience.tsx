@@ -21,11 +21,31 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="py-12 md:py-20 bg-darkBg text-white px-6 md:px-20 relative"
+      className="py-12 md:py-20 bg-darkBg text-white px-6 md:px-20 relative border-t border-white/5"
     >
-      <h2 className="text-2xl md:text-3xl font-bold mb-8 md:mb-12 text-center">
-        <span className="text-neonPurple">/</span> Experience
-      </h2>
+      {/* UPDATED: Section Header with Subtitle */}
+      <div className="mb-12 md:mb-16 text-center">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-2xl md:text-3xl font-bold mb-4"
+        >
+          <span className="text-neonPurple">/</span> Experience
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-gray-400 max-w-2xl mx-auto text-sm md:text-base"
+        >
+          My professional journey and the roles where I've grown and
+          contributed.
+        </motion.p>
+      </div>
 
       <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/20 before:to-transparent">
         {experiences.map((exp, idx) => (

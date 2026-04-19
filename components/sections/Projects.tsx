@@ -221,7 +221,7 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
     null,
   );
 
-  // NEW: State to track visible projects
+  // State to track visible projects
   const [visibleCount, setVisibleCount] = useState(6);
 
   useEffect(() => {
@@ -261,9 +261,29 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
       id="projects"
       className="py-12 md:py-20 bg-darkBg text-white px-6 md:px-20 border-t border-white/5"
     >
-      <h2 className="text-2xl md:text-3xl font-bold mb-8 md:mb-12 text-center">
-        <span className="text-neonBlue">/</span> Featured Projects
-      </h2>
+      {/* UPDATED: Section Header with Subtitle */}
+      <div className="mb-12 md:mb-16 text-center">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-2xl md:text-3xl font-bold mb-4"
+        >
+          <span className="text-neonBlue">/</span> Featured Projects
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-gray-400 max-w-2xl mx-auto text-sm md:text-base"
+        >
+          A selection of my best work, demonstrating my ability to build dynamic, 
+          scalable, and user-centric web applications.
+        </motion.p>
+      </div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {/* Slice the array based on visibleCount */}
@@ -353,7 +373,6 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
                 {project.techStack.map((tech, techIdx) => (
                   <span
                     key={techIdx}
-                    // UPDATED: Ambient purple style with high visibility text for cards
                     className="px-2.5 py-0.5 text-[10px] font-medium bg-neonPurple/10 border border-neonPurple/30 rounded-full text-[#d8b4fe] shadow-[0_0_8px_rgba(157,78,221,0.15)]"
                   >
                     {tech}
