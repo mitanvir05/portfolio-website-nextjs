@@ -238,7 +238,7 @@ export default function ContactSection() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-neonBlue hover:bg-neonBlue/80 text-black font-bold py-6 text-base md:text-lg rounded-xl transition-all shadow-[0_0_15px_rgba(0,243,255,0.2)] flex items-center justify-center gap-2 mt-4"
+                className="w-full bg-neonBlue hover:bg-neonBlue/80 text-black font-bold py-6 text-base md:text-lg rounded-xl transition-all shadow-[0_0_15px_rgba(0,243,255,0.2)] flex items-center justify-center gap-2 mt-4 cursor-pointer"
               >
                 {isLoading ? (
                   <>

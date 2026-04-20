@@ -6,13 +6,13 @@ const experiences = [
   {
     title: "Junior Software Engineer",
     company: "Skyland Web",
-    date: "01-06-2024 - Present",
+    date: "06.2024 - Present",
     desc: "Building and improving modern web apps with the team, focusing on clean, responsive, and scalable front-end development using React.js and Next.js.",
   },
   {
     title: "Software Engineer Intern",
     company: "Skyland Web",
-    date: "01-03-2024 - 31-05-2024",
+    date: "03.2024 - 05.2024",
     desc: "Created user-friendly front-end features using React.js, ensuring smooth and scalable experiences.",
   },
 ];
@@ -62,7 +62,7 @@ export default function Experience() {
 
             <div className="w-[calc(100%-3rem)] md:w-[calc(50%-2.5rem)] p-5 md:p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-neonPurple/50 transition-colors duration-300">
               <div className="flex flex-col mb-2">
-                <span className="text-neonBlue text-[10px] md:text-sm font-semibold uppercase tracking-wider">
+                <span className="text-neonBlue text-[10px] md:text-sm font-semibold  tracking-wider">
                   {exp.date}
                 </span>
                 <h3 className="text-lg md:text-xl font-bold">{exp.title}</h3>
