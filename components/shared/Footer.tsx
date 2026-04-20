@@ -28,18 +28,17 @@ export default function Footer() {
           <Link
             href="https://linkedin.com/in/muhaimin-tanvir"
             target="_blank"
-            className="text-gray-400 hover:text-neonBlue transition-colors"
+            className="text-gray-400 hover:text-[#0077b5] transition-colors"
           >
             <FaLinkedin size={24} />
           </Link>
-          {/* Added WhatsApp Icon and Link */}
-          <Link 
-        href="https://wa.me/8801700955009?text=Hello%20Tanvir!%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20contact%20with%20you." 
-        target="_blank" 
-        className="text-gray-400 hover:text-green-400 transition-colors"
-      >
-        <FaWhatsapp size={24} />
-      </Link>
+          <Link
+            href="https://wa.me/8801700955009?text=Hello%20Tanvir!%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20contact%20with%20you."
+            target="_blank"
+            className="text-gray-400 hover:text-[#25D366] transition-colors"
+          >
+            <FaWhatsapp size={24} />
+          </Link>
         </div>
       </div>
     </footer>

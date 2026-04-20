@@ -30,22 +30,22 @@ export default function Navbar() {
             Skills
           </Link>
           <Link
-            href="#projects"
+            href="#experience"
             className="hover:text-neonBlue transition-colors"
           >
-            Projects
+            Experience
           </Link>
           <Link
-            href="#experience"
+            href="#projects"
             className="hover:text-neonPurple transition-colors"
           >
-            Experience
+            Projects
           </Link>
         </div>
 
         <Link
           href="#contact"
-          className="px-6 py-2.5 rounded-full border border-white/20 hover:border-neonBlue hover:text-neonBlue text-sm transition-all duration-300 text-white"
+          className="px-6 py-2.5 rounded-full border border-white/20 hover:border-neonPurple  text-sm transition-all duration-300 text-white"
         >
           Let's Talk
         </Link>
