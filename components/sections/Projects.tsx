@@ -340,7 +340,9 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
   const toggleShowMore = () => {
     if (visibleCount >= projects.length) {
       setVisibleCount(6);
-      document.getElementById("projects")?.scrollIntoView();
+      document
+        .getElementById("projects")
+        ?.scrollIntoView({ behavior: "smooth" });
     } else {
       setVisibleCount(projects.length);
     }
@@ -359,7 +361,7 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
           transition={{ duration: 0.5 }}
           className="text-2xl md:text-3xl font-bold mb-4"
         >
-          <span className="text-neonPurple">/</span> Featured Projects
+          <span className="text-neonBlue">/</span> Featured Projects
         </motion.h2>
 
         <motion.p
@@ -408,6 +410,7 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
                 CLICK TO READ MORE →
               </div>
 
+              {/* ACTION LINKS: CARD (UPDATED LABELS & REMOVED TOOLTIPS) */}
               <div
                 className="flex flex-wrap gap-4 mb-6 pt-4 border-t border-white/10"
                 onClick={(e) => e.stopPropagation()}
@@ -418,40 +421,34 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
                     target="_blank"
                     className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold"
                   >
-                    <FaCodeBranch size={14} /> REPO
+                    <FaCodeBranch size={14} /> Code
                   </Link>
                 )}
                 {project.frontendLink && (
                   <Link
                     href={project.frontendLink}
                     target="_blank"
-                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold relative group/tooltip"
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold"
                   >
-                    <FaCodeBranch size={14} /> FR
-                    <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-darkBg/95 border border-neonBlue/50 text-neonBlue text-[10px] px-2.5 py-1.5 rounded-md opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all shadow-lg z-50">
-                      Frontend Repository
-                    </span>
+                    <FaCodeBranch size={14} /> Frontend
                   </Link>
                 )}
                 {project.backendLink && (
                   <Link
                     href={project.backendLink}
                     target="_blank"
-                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold relative group/tooltip"
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-semibold"
                   >
-                    <FaCodeBranch size={14} /> BR
-                    <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-darkBg/95 border border-neonBlue/50 text-neonBlue text-[10px] px-2.5 py-1.5 rounded-md opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all shadow-lg z-50">
-                      Backend Repository
-                    </span>
+                    <FaCodeBranch size={14} /> Backend
                   </Link>
                 )}
                 {project.liveLink && (
                   <Link
                     href={project.liveLink}
                     target="_blank"
-                    className="text-neonBlue hover:text-cyan-300 transition-colors flex items-center gap-1.5 text-xs font-semibold"
+                    className="text-neonBlue hover:text-cyan-400 transition-colors flex items-center gap-1.5 text-xs font-semibold"
                   >
-                    <FaExternalLinkAlt size={14} /> LIVE
+                    <FaExternalLinkAlt size={14} /> Live
                   </Link>
                 )}
               </div>
