@@ -62,7 +62,11 @@ const ProjectModal = ({
 
         <div className="space-y-6">
           {project.imageUrls && project.imageUrls.length > 0 && (
-            <AutoSlider imageUrls={project.imageUrls} title={project.title} />
+            <AutoSlider
+              imageUrls={project.imageUrls}
+              title={project.title}
+              isModal={true}
+            />
           )}
 
           <div className="flex flex-col gap-4">
@@ -145,21 +149,43 @@ const ProjectModal = ({
 const AutoSlider = ({
   imageUrls,
   title,
+  isModal = false,
 }: {
   imageUrls: string[];
   title: string;
+  isModal?: boolean;
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isInteracting, setIsInteracting] = useState(false); // Tracks both hover and touch
+  const [isInteracting, setIsInteracting] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Detects if this specific slider is currently visible on the screen
+  // Drag States
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startScrollLeft, setStartScrollLeft] = useState(0);
+
+  // Touch States
+  const [touchStartX, setTouchStartX] = useState(0);
+
   const isInView = useInView(scrollRef, { once: false, amount: 0.1 });
 
+  const scrollTo = (index: number) => {
+    if (!scrollRef.current) return;
+    const clientWidth = scrollRef.current.clientWidth;
+    scrollRef.current.scrollTo({
+      left: index * clientWidth,
+    });
+    setCurrentIndex(index);
+  };
+
+  const goToNext = () =>
+    scrollTo(currentIndex === imageUrls.length - 1 ? 0 : currentIndex + 1);
+  const goToPrev = () =>
+    scrollTo(currentIndex === 0 ? imageUrls.length - 1 : currentIndex - 1);
+
   const handleScroll = () => {
-    if (scrollRef.current) {
+    if (scrollRef.current && !isDragging) {
       const { scrollLeft, clientWidth } = scrollRef.current;
-      // Math.round ensures we only change the index when the image is more than 50% visible
       const newIndex = Math.round(scrollLeft / clientWidth);
       if (newIndex !== currentIndex) {
         setCurrentIndex(newIndex);
@@ -167,66 +193,112 @@ const AutoSlider = ({
     }
   };
 
+  // --- Mouse Drag Handlers ---
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!isModal || !scrollRef.current) return;
+    setIsDragging(true);
+    setIsInteracting(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setStartScrollLeft(scrollRef.current.scrollLeft);
+  };
+
+  const handleMouseLeaveOrUp = (e: React.MouseEvent) => {
+    if (!isModal) return;
+    if (isDragging && scrollRef.current) {
+      setIsDragging(false);
+
+      const x = e.pageX - scrollRef.current.offsetLeft;
+      const walk = x - startX;
+
+      if (currentIndex === imageUrls.length - 1 && walk < -40) goToNext();
+      else if (currentIndex === 0 && walk > 40) goToPrev();
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isModal || !isDragging || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    scrollRef.current.scrollLeft = startScrollLeft - walk;
+  };
+
+  // --- Touch Handlers ---
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsInteracting(true);
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    setIsInteracting(false);
+    const touchEndX = e.changedTouches[0].clientX;
+    const walk = touchEndX - touchStartX;
+
+    if (currentIndex === imageUrls.length - 1 && walk < -40) goToNext();
+    else if (currentIndex === 0 && walk > 40) goToPrev();
+  };
+
   useEffect(() => {
-    // Stop auto-slide if user is touching/hovering, if off-screen, or if only 1 image
     if (isInteracting || imageUrls.length <= 1 || !isInView) return;
 
     const interval = setInterval(() => {
-      if (scrollRef.current) {
-        const { clientWidth } = scrollRef.current;
-        
-        // Calculate the exact next index (loop back to 0 if at the end)
-        const nextIndex = currentIndex === imageUrls.length - 1 ? 0 : currentIndex + 1;
-
-        // Scroll to the exact pixel offset instead of using scrollBy
-        scrollRef.current.scrollTo({
-          left: nextIndex * clientWidth,
-          behavior: "smooth", // Re-added smooth so it slides beautifully instead of cutting
-        });
+      if (scrollRef.current && !isDragging) {
+        goToNext();
       }
     }, 3000);
 
-    // Including currentIndex in dependencies ensures the timer resets 
-    // whenever the user manually swipes to a new image!
     return () => clearInterval(interval);
-  }, [isInteracting, imageUrls.length, isInView, currentIndex]);
+  }, [isInteracting, imageUrls.length, isInView, currentIndex, isDragging]);
+
+  // UPDATED: Added cursor-pointer so the hand icon always shows
+  const dragClasses = isModal
+    ? `cursor-pointer select-none ${isDragging ? "" : "snap-x snap-mandatory"}`
+    : "cursor-pointer snap-x snap-mandatory";
 
   return (
     <div
       className="mb-4 md:mb-6 rounded-xl overflow-hidden border border-white/10 aspect-video relative group/slider"
-      // Pause on mouse hover (Desktop)
       onMouseEnter={() => setIsInteracting(true)}
       onMouseLeave={() => setIsInteracting(false)}
-      // Pause on screen touch (Mobile)
-      onTouchStart={() => setIsInteracting(true)}
-      onTouchEnd={() => setIsInteracting(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex w-full h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide touch-pan-y"
-        style={{ WebkitOverflowScrolling: "touch" }} // Ensures smooth momentum scrolling on iOS
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeaveOrUp}
+        onMouseUp={handleMouseLeaveOrUp}
+        onMouseMove={handleMouseMove}
+        // FIXED: Replaced scrollbar-hide with our custom no-scrollbar class
+        className={`flex w-full h-full overflow-x-auto no-scrollbar ${dragClasses}`}
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
         {imageUrls.map((url, i) => (
           <div key={i} className="w-full h-full shrink-0 snap-center">
-            <img 
-              src={url} 
-              alt={`${title} screenshot ${i + 1}`} 
-              className="object-cover w-full h-full pointer-events-none" // Prevents image ghost-dragging on mobile
+            <img
+              src={url}
+              alt={`${title} screenshot ${i + 1}`}
+              className="object-cover w-full h-full pointer-events-none"
+              draggable="false"
             />
           </div>
         ))}
       </div>
-      
+
       {imageUrls.length > 1 && (
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20 bg-black/40 px-3 py-1.5 rounded-full border border-white/10">
           {imageUrls.map((_, i) => (
             <div
               key={i}
-              className={`w-1.5 h-1.5 rounded-full transition-all ${
+              onClick={(e) => {
+                e.stopPropagation();
+                scrollTo(i);
+              }}
+              className={`w-1.5 h-1.5 rounded-full transition-all cursor-pointer ${
                 currentIndex === i
                   ? "bg-neonBlue scale-125 shadow-[0_0_8px_rgba(0,243,255,0.8)]"
-                  : "bg-white/30"
+                  : "bg-white/30 hover:bg-white/60"
               }`}
             />
           ))}
@@ -235,6 +307,7 @@ const AutoSlider = ({
     </div>
   );
 };
+
 /**
  * MAIN PROJECTS COMPONENT
  */
@@ -243,7 +316,6 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
     null,
   );
 
-  // State to track visible projects
   const [visibleCount, setVisibleCount] = useState(6);
 
   useEffect(() => {
@@ -265,13 +337,10 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
     );
   }
 
-  // Toggles between showing 6 and showing all
   const toggleShowMore = () => {
     if (visibleCount >= projects.length) {
       setVisibleCount(6);
-      document
-        .getElementById("projects")
-        ?.scrollIntoView({ behavior: "smooth" });
+      document.getElementById("projects")?.scrollIntoView();
     } else {
       setVisibleCount(projects.length);
     }
@@ -282,7 +351,6 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
       id="projects"
       className="py-12 md:py-20 bg-darkBg text-white px-6 md:px-20 border-t border-white/5"
     >
-      {/* Section Header */}
       <div className="mb-12 md:mb-16 text-center">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -307,7 +375,6 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
       </div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {/* Slice the array based on visibleCount */}
         {projects.slice(0, visibleCount).map((project, idx) => (
           <motion.div
             key={project._id || idx}
@@ -315,10 +382,8 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            whileHover={{ y: -8 }} // 1. NEW: Framer Motion handles the hover lift
+            whileHover={{ y: -8 }}
             transition={{ duration: 0.5, delay: (idx % 6) * 0.1 }}
-            // 2. UPDATED: Removed transition-all and hover:-translate-y-2
-            // 3. UPDATED: Added transition-colors transition-shadow
             className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 md:p-8 hover:border-neonBlue/5 transition-colors transition-shadow duration-300 flex flex-col cursor-pointer"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-neonBlue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none" />
@@ -343,7 +408,6 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
                 CLICK TO READ MORE →
               </div>
 
-              {/* ACTION LINKS: CARD */}
               <div
                 className="flex flex-wrap gap-4 mb-6 pt-4 border-t border-white/10"
                 onClick={(e) => e.stopPropagation()}
@@ -407,7 +471,6 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
         ))}
       </div>
 
-      {/* SHOW MORE BUTTON */}
       {projects.length > 6 && (
         <motion.div
           initial={{ opacity: 0 }}
