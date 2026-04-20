@@ -19,8 +19,10 @@ export default function Hero() {
 
   return (
     <section className="min-h-[85vh] md:min-h-screen flex items-center justify-center relative overflow-hidden bg-darkBg text-white py-10 md:py-0">
-      <div className="absolute top-1/4 left-1/4 w-48 md:w-96 h-48 md:h-96 bg-neonBlue/10 md:bg-neonBlue/20 rounded-full blur-[80px] md:blur-[120px] mix-blend-screen" />
-      <div className="absolute bottom-1/4 right-1/4 w-48 md:w-96 h-48 md:h-96 bg-neonPurple/10 md:bg-neonPurple/20 rounded-full blur-[80px] md:blur-[120px] mix-blend-screen" />
+      
+      {/* UPDATED: Added 'hidden md:block' to hide on mobile, and cleaned up sizing classes */}
+      <div className="hidden md:block absolute top-1/4 left-1/4 w-96 h-96 bg-neonBlue/20 rounded-full blur-[120px] mix-blend-screen" />
+      <div className="hidden md:block absolute bottom-1/4 right-1/4 w-96 h-96 bg-neonPurple/20 rounded-full blur-[120px] mix-blend-screen" />
 
       <div className="z-10 text-center space-y-4 md:space-y-6 max-w-3xl px-6">
         <motion.div
