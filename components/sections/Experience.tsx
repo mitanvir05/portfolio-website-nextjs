@@ -32,7 +32,7 @@ export default function Experience() {
           transition={{ duration: 0.5 }}
           className="text-2xl md:text-3xl font-bold mb-4"
         >
-          <span className="text-neonPurple">/</span> Experience
+          <span className="text-neonBlue">/</span> Experience
         </motion.h2>
 
         <motion.p

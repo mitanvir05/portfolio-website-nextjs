@@ -75,7 +75,7 @@ export default function Achievements() {
             transition={{ duration: 0.5 }}
             className="text-2xl md:text-3xl font-bold mb-4"
           >
-            <span className="text-neonPurple">/</span> Achievements & Activities
+            <span className="text-neonBlue">/</span> Achievements & Activities
           </motion.h2>
 
           <motion.p

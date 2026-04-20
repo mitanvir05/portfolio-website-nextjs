@@ -55,7 +55,7 @@ export default function ContactSection() {
     >
       <div className="max-w-3xl mx-auto">
         <h2 className="text-2xl md:text-3xl font-bold mb-2 md:mb-4 text-center">
-          <span className="text-neonBlue">/</span> Let's Connect
+          <span className="text-neonPurple">/</span> Let's Connect
         </h2>
 
         <p className="text-center text-sm md:text-base text-gray-400 mb-6 md:mb-12">
