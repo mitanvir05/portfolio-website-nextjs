@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion"; // UPDATED: Imported Variants
+import { motion, Variants } from "framer-motion";
 import { FaTrophy, FaUsers, FaCameraRetro } from "react-icons/fa";
 
 const activities = [
@@ -101,7 +101,10 @@ export default function Achievements() {
             <motion.div
               key={activity.id}
               variants={cardVariants}
-              className={`group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-2 cursor-default ${activity.border} ${activity.shadow}`}
+              whileHover={{ y: -8 }} // 1. NEW: Framer Motion handles the hover lift
+              // 2. UPDATED: Removed transition-all and hover:-translate-y-2
+              // 3. UPDATED: Added transition-colors transition-shadow
+              className={`group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 md:p-8 transition-colors transition-shadow duration-300 cursor-default ${activity.border} ${activity.shadow}`}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none" />
 
