@@ -174,9 +174,9 @@ const AutoSlider = ({
       if (scrollRef.current) {
         const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
         if (scrollLeft + clientWidth >= scrollWidth - 10) {
-          scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+          scrollRef.current.scrollTo({ left: 0,});
         } else {
-          scrollRef.current.scrollBy({ left: clientWidth, behavior: "smooth" });
+          scrollRef.current.scrollBy({ left: clientWidth,});
         }
       }
     }, 3000);
