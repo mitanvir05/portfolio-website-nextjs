@@ -160,7 +160,7 @@ html.lenis body {
 }
 
 
-/* Add this to globals.css to completely kill the native scrollbar */
+/* scroll bar behaviour */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
