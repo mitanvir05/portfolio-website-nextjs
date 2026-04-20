@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
   FaCodeBranch,
   FaExternalLinkAlt,
@@ -153,6 +153,9 @@ const AutoSlider = ({
   const [isHovered, setIsHovered] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Detects if this specific slider is currently visible on the screen
+  const isInView = useInView(scrollRef, { once: false, amount: 0.1 });
+
   const handleScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, clientWidth } = scrollRef.current;
@@ -162,8 +165,10 @@ const AutoSlider = ({
   };
 
   useEffect(() => {
-    const isDesktop = typeof window !== "undefined" && window.innerWidth >= 768;
-    if (!isDesktop || isHovered || imageUrls.length <= 1) return;
+    // UPDATED: Removed the 'isDesktop' check so it runs on all devices!
+
+    // Completely stops the layout calculations if the slider is off-screen, hovered, or has only 1 image
+    if (isHovered || imageUrls.length <= 1 || !isInView) return;
 
     const interval = setInterval(() => {
       if (scrollRef.current) {
@@ -175,19 +180,23 @@ const AutoSlider = ({
         }
       }
     }, 3000);
+
     return () => clearInterval(interval);
-  }, [isHovered, imageUrls.length]);
+  }, [isHovered, imageUrls.length, isInView]);
 
   return (
     <div
       className="mb-4 md:mb-6 rounded-xl overflow-hidden border border-white/10 aspect-video relative group/slider"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      // Optional: Add touch events to pause sliding when a user is actively swiping on mobile
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
     >
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex w-full h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+        className="flex w-full h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide touch-pan-y"
       >
         {imageUrls.map((url, i) => (
           <div key={i} className="w-full h-full shrink-0 snap-center">
@@ -212,7 +221,6 @@ const AutoSlider = ({
     </div>
   );
 };
-
 /**
  * MAIN PROJECTS COMPONENT
  */
