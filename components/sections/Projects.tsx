@@ -150,7 +150,7 @@ const AutoSlider = ({
   title: string;
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false); // Tracks both hover and touch
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Detects if this specific slider is currently visible on the screen
@@ -159,51 +159,65 @@ const AutoSlider = ({
   const handleScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, clientWidth } = scrollRef.current;
+      // Math.round ensures we only change the index when the image is more than 50% visible
       const newIndex = Math.round(scrollLeft / clientWidth);
-      setCurrentIndex(newIndex);
+      if (newIndex !== currentIndex) {
+        setCurrentIndex(newIndex);
+      }
     }
   };
 
   useEffect(() => {
-    // UPDATED: Removed the 'isDesktop' check so it runs on all devices!
-
-    // Completely stops the layout calculations if the slider is off-screen, hovered, or has only 1 image
-    if (isHovered || imageUrls.length <= 1 || !isInView) return;
+    // Stop auto-slide if user is touching/hovering, if off-screen, or if only 1 image
+    if (isInteracting || imageUrls.length <= 1 || !isInView) return;
 
     const interval = setInterval(() => {
       if (scrollRef.current) {
-        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-        if (scrollLeft + clientWidth >= scrollWidth - 10) {
-          scrollRef.current.scrollTo({ left: 0,});
-        } else {
-          scrollRef.current.scrollBy({ left: clientWidth,});
-        }
+        const { clientWidth } = scrollRef.current;
+        
+        // Calculate the exact next index (loop back to 0 if at the end)
+        const nextIndex = currentIndex === imageUrls.length - 1 ? 0 : currentIndex + 1;
+
+        // Scroll to the exact pixel offset instead of using scrollBy
+        scrollRef.current.scrollTo({
+          left: nextIndex * clientWidth,
+          behavior: "smooth", // Re-added smooth so it slides beautifully instead of cutting
+        });
       }
     }, 3000);
 
+    // Including currentIndex in dependencies ensures the timer resets 
+    // whenever the user manually swipes to a new image!
     return () => clearInterval(interval);
-  }, [isHovered, imageUrls.length, isInView]);
+  }, [isInteracting, imageUrls.length, isInView, currentIndex]);
 
   return (
     <div
       className="mb-4 md:mb-6 rounded-xl overflow-hidden border border-white/10 aspect-video relative group/slider"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      // Optional: Add touch events to pause sliding when a user is actively swiping on mobile
-      onTouchStart={() => setIsHovered(true)}
-      onTouchEnd={() => setIsHovered(false)}
+      // Pause on mouse hover (Desktop)
+      onMouseEnter={() => setIsInteracting(true)}
+      onMouseLeave={() => setIsInteracting(false)}
+      // Pause on screen touch (Mobile)
+      onTouchStart={() => setIsInteracting(true)}
+      onTouchEnd={() => setIsInteracting(false)}
     >
       <div
         ref={scrollRef}
         onScroll={handleScroll}
         className="flex w-full h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide touch-pan-y"
+        style={{ WebkitOverflowScrolling: "touch" }} // Ensures smooth momentum scrolling on iOS
       >
         {imageUrls.map((url, i) => (
           <div key={i} className="w-full h-full shrink-0 snap-center">
-            <img src={url} alt={title} className="object-cover w-full h-full" />
+            <img 
+              src={url} 
+              alt={`${title} screenshot ${i + 1}`} 
+              className="object-cover w-full h-full pointer-events-none" // Prevents image ghost-dragging on mobile
+            />
           </div>
         ))}
       </div>
+      
       {imageUrls.length > 1 && (
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20 bg-black/40 px-3 py-1.5 rounded-full border border-white/10">
           {imageUrls.map((_, i) => (
