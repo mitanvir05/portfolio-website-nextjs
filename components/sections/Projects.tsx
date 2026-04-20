@@ -247,7 +247,6 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
   const toggleShowMore = () => {
     if (visibleCount >= projects.length) {
       setVisibleCount(6);
-      // Optional: Scroll back to the top of the projects section when collapsing
       document
         .getElementById("projects")
         ?.scrollIntoView({ behavior: "smooth" });
@@ -261,7 +260,7 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
       id="projects"
       className="py-12 md:py-20 bg-darkBg text-white px-6 md:px-20 border-t border-white/5"
     >
-      {/* UPDATED: Section Header with Subtitle */}
+      {/* Section Header */}
       <div className="mb-12 md:mb-16 text-center">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -280,8 +279,8 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-gray-400 max-w-2xl mx-auto text-sm md:text-base"
         >
-          A selection of my best work, demonstrating my ability to build dynamic, 
-          scalable, and user-centric web applications.
+          A selection of my best work, demonstrating my ability to build
+          dynamic, scalable, and user-centric web applications.
         </motion.p>
       </div>
 
@@ -294,9 +293,11 @@ export default function Projects({ projects }: { projects: ProjectType[] }) {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            // Stagger animation based on modulo 6 so newly revealed cards animate perfectly
+            whileHover={{ y: -8 }} // 1. NEW: Framer Motion handles the hover lift
             transition={{ duration: 0.5, delay: (idx % 6) * 0.1 }}
-            className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 md:p-8 hover:border-neonBlue/5 transition-all duration-300 hover:-translate-y-2 flex flex-col cursor-pointer"
+            // 2. UPDATED: Removed transition-all and hover:-translate-y-2
+            // 3. UPDATED: Added transition-colors transition-shadow
+            className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 md:p-8 hover:border-neonBlue/5 transition-colors transition-shadow duration-300 flex flex-col cursor-pointer"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-neonBlue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none" />
 

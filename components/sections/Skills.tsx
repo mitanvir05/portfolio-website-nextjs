@@ -99,7 +99,7 @@ export default function Skills() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: catIdx * 0.1 }}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 md:p-8 hover:border-neonPurple/50 transition-all duration-300 flex flex-col items-center text-center overflow-hidden shadow-lg w-full"
+              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 md:p-8 hover:border-neonPurple/50 transition-colors duration-300 flex flex-col items-center text-center overflow-hidden shadow-lg w-full"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-neonPurple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none" />
 
@@ -122,7 +122,7 @@ export default function Skills() {
                       stiffness: 100,
                     }}
                     // UPDATED: Kept as flex-row everywhere for horizontal pill design, added truncate to protect text
-                    className="flex flex-row items-center justify-center gap-2 px-2 py-2.5 md:px-3 md:py-3 rounded-xl bg-darkBg border border-white/10 hover:border-neonPurple hover:shadow-[0_0_15px_rgba(157,78,221,0.3)] transition-all duration-300 cursor-default"
+                    className="flex flex-row items-center justify-center gap-2 px-2 py-2.5 md:px-3 md:py-3 rounded-xl bg-darkBg border border-white/10 hover:border-neonPurple hover:shadow-[0_0_15px_rgba(157,78,221,0.3)] transition-colors duration-300 cursor-default"
                   >
                     {/* shrink-0 ensures the icon never gets squished */}
                     <skill.icon
